@@ -85,6 +85,6 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        assetManager.dispose();
     }
 }

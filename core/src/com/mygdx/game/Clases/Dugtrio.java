@@ -21,7 +21,6 @@ public class Dugtrio extends Image {
     public boolean colisiona(float y ) {
         // Calculem els rectangles de col·lisió dels dos objectes
         Rectangle rectangleDugtrio = new Rectangle(getX(), getY(), getWidth(), getHeight());
-        System.out.println("Y " + y);
         Rectangle rectangleEevee = new Rectangle(55, y, 150, 150);
         //El mètode overlaps indica si hi ha solapament entre els dos rectangles calculats
         return rectangleDugtrio.overlaps(rectangleEevee);

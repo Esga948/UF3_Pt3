@@ -30,11 +30,12 @@ public class AssetsDesc {
     public static final AssetDescriptor<Texture> umbreon2Texture = new AssetDescriptor("umbreon2.png",Texture.class);
     public static final AssetDescriptor<Texture> umbreon3Texture = new AssetDescriptor("umbreon3.png",Texture.class);
     public static final AssetDescriptor<Texture> umbreon4Texture = new AssetDescriptor("umbreon4.png",Texture.class);
-    //Gif leafeon
+    /*//Gif leafeon
     public static final AssetDescriptor<Texture> leafeon1Texture = new AssetDescriptor("leafeon.png",Texture.class);
     public static final AssetDescriptor<Texture> leafeon2Texture = new AssetDescriptor("leafeon2.png",Texture.class);
     public static final AssetDescriptor<Texture> leafeon3Texture = new AssetDescriptor("leafeon3.png",Texture.class);
     public static final AssetDescriptor<Texture> leafeon4Texture = new AssetDescriptor("leafeon4.png",Texture.class);
+    */
     //Sonidos
     public static final AssetDescriptor<Music> ambienteJuego = new AssetDescriptor("musica-back.mp3", Music.class);
     public static final AssetDescriptor<Music> ambienteInicio = new AssetDescriptor("musica-inicio.mp3", Music.class);

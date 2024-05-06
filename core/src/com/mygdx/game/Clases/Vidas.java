@@ -23,11 +23,21 @@ public class Vidas {
     }
 
     public void eliminarVida(){
-        if (numVidas<=0){
+        if (numVidas <= 0){
             numVidas = 0;
         }else{
             numVidas--;
             listaVidas.remove(listaVidas.size()-1);
+        }
+    }
+
+    public void añadirVida(Texture vida){
+        if (numVidas >= 3){
+            numVidas = 3;
+        }else{
+            System.out.println("numVidas: " + numVidas);
+            numVidas++;
+            listaVidas.add(vida);
         }
     }
     public ArrayList<Texture> getListaVidas() {
