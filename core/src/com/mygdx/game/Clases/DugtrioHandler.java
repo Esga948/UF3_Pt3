@@ -64,13 +64,13 @@ public class DugtrioHandler extends Group {
         }
     }
 
-    public boolean collectD(TextureRegion eevee){
+    public boolean collectD(float y){
         boolean result = false;
         Iterator<Actor> it = getChildren().iterator();
 
         while (it.hasNext()){
             Dugtrio dugtrio = (Dugtrio) it.next();
-            if(dugtrio.colisiona(eevee)){
+            if(dugtrio.colisiona(y)){
                 removeActor(dugtrio);
                 result = true;
                 chocarSound.play();

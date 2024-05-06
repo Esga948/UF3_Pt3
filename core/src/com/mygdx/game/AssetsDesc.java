@@ -11,6 +11,10 @@ public class AssetsDesc {
     public static final AssetDescriptor<Texture> diaTexture = new AssetDescriptor("background-dia.png",Texture.class);
     public static final AssetDescriptor<Texture> nocheTexture = new AssetDescriptor("background-noche.jpg",Texture.class);
     public static final AssetDescriptor<Texture> back1Texture = new AssetDescriptor("background.jpg",Texture.class);
+    public static final AssetDescriptor<Texture> inicioTexture = new AssetDescriptor("inicio.jpg",Texture.class);
+    public static final AssetDescriptor<Texture> finalDerrotaTexture = new AssetDescriptor("finalDerrota.png",Texture.class);
+
+
     public static final AssetDescriptor<Texture> vidaTexture = new AssetDescriptor("vida.png",Texture.class);
 
     //Imagenes obstaculos

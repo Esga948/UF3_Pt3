@@ -20,7 +20,6 @@ public class Eevee extends Image{
     TextureRegion eevee4;
 
     public Eevee(TextureRegion eevee1, TextureRegion eevee2, TextureRegion eevee3, TextureRegion eevee4) {
-        setPosition(55, 34);
         this.gifEevee = new Array<>();
         this.eevee1 = eevee1;
         this.eevee2 = eevee2;
@@ -36,9 +35,9 @@ public class Eevee extends Image{
         gifEevee.add(eevee4);
     }
 
-    public void Jump(float deltaY){
-
-    }
+    /*public void Jump(float deltaY){
+        setPosition(55, 150);
+    }*/
 
     public Array<TextureRegion> getGifEevee() {
         return gifEevee;

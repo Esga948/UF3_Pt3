@@ -20,15 +20,18 @@ import com.mygdx.game.InputHandler;
 
 import java.util.ArrayList;
 
+import sun.jvm.hotspot.debugger.win32.coff.TestDebugInfo;
+
 public class GameScreen implements Screen {
     final Drop game;
     public final Stage stage;
     final AssetManager assetManager = new AssetManager();
     //Fondo
-    Texture backgraundDia, backgraundNoche, background, imagenVida;
+    Texture backgraundDia, backgraundNoche, backgraund, imagenVida;
     Music ambienteJuego;
     //Score
     private int score = 0;
+    private int score2 = 0;
     private int index = 0;
     private float scoreTime = 0;
     private final float SCORE_INTERVAL = 1;
@@ -52,7 +55,7 @@ public class GameScreen implements Screen {
     Vidas vidas;
     ArrayList<Texture> listaVidas = new ArrayList<>();
 
-    public static TextureRegion currentFrameE;
+    //public static TextureRegion currentFrameE;
     public GameScreen(Drop game) {
         this.game = game;
 
@@ -101,7 +104,7 @@ public class GameScreen implements Screen {
 
         stage.addActor(dMove);
 
-        Gdx.input.setInputProcessor(new InputHandler(this));
+        //Gdx.input.setInputProcessor(new InputHandler(this));
         ambienteJuego.play();
     }
 
@@ -115,56 +118,71 @@ public class GameScreen implements Screen {
         ambienteJuego = assetManager.get(AssetsDesc.ambienteJuego);
         backgraundDia = assetManager.get(AssetsDesc.diaTexture);
         backgraundNoche = assetManager.get(AssetsDesc.nocheTexture);
-        background = assetManager.get(AssetsDesc.back1Texture);
+        backgraund = assetManager.get(AssetsDesc.back1Texture);
         imagenVida = assetManager.get(AssetsDesc.vidaTexture);
 
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
-        currentFrameE = gifEevee.get((int) (stateTime / 0.15f) % gifEevee.size);
-        TextureRegion currentFrameL = gifLeafeon.get((int) (stateTime / 0.15f) % gifLeafeon.size);
-        TextureRegion currentFrameU = gifUmbreon.get((int) (stateTime / 0.15f) % gifUmbreon.size);
+        TextureRegion currentFrameE = gifEevee.get((int) (stateTime / 0.15f) % gifEevee.size);
+        //TextureRegion currentFrameL = gifLeafeon.get((int) (stateTime / 0.15f) % gifLeafeon.size);
+        //TextureRegion currentFrameU = gifUmbreon.get((int) (stateTime / 0.15f) % gifUmbreon.size);
 
-        if (dMove.collectD(currentFrameE)){
+
+        if (scoreTime >= SCORE_INTERVAL){
+            score += 5;
+            score2 += 5;
+            scoreTime = 0;
+        }
+        if (dMove.collectD(currentFrameE.getRegionY())){
             vidas.eliminarVida();
         }
         if (vidas.getNumVidas() <= 0) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
-        if (scoreTime >= SCORE_INTERVAL){
-            score += 5;
-            index += 5;
-            scoreTime = 0;
-        }
-
         stage.getBatch().begin();
 
-        /*if (index % 500 == 0){
-            index = 0;
-            stage.getBatch().draw(backgraundNoche, 0, -10);
-        }else{
-            stage.getBatch().draw(backgraundDia, 0, -20);
+        //Mostrar imagen back
+        switch (index){
+            case 0:
+                if (score2 >= 50){
+                    stage.getBatch().draw(backgraund, 0, -20);
+                    index++;
+                    score2 = 0;
+                }else{
+                    stage.getBatch().draw(backgraundDia, 0, -20);
+                }
+                break;
+            case 1:
+                if (score2 >= 50){
+                    stage.getBatch().draw(backgraundNoche, 0, -10);
+                    index++;
+                    score2 = 0;
+                }else{
+                    stage.getBatch().draw(backgraund, 0, -20);
+                }
+                break;
+            case 2:
+                if (score2 >= 50){
+                    stage.getBatch().draw(backgraund, 0, -20);
+                    index = 0;
+                    score2 = 0;
+                }else{
+                    stage.getBatch().draw(backgraundNoche, 0, -10);
+                }
+            default:
+                break;
         }
-
-        if (score % 200 == 0){
-            index++;
-        }else{
-
-        }*/
-
-        stage.getBatch().draw(backgraundNoche, 0, -10);
-
 
         //stage.getBatch().draw(currentFrameL,55, 34);
         //stage.getBatch().draw(currentFrameU,55, 34);
         if (Gdx.input.isTouched()){
-            stage.getBatch().draw(currentFrameE, 55, 150);
-
+            stage.getBatch().draw(currentFrameE, 55, 250);
         }else{
             stage.getBatch().draw(currentFrameE,55, 34);
         }
         //Score y vidas
-        game.font.draw(stage.getBatch(), "Score: " + score, 20,450);
+        game.fontScore.draw(stage.getBatch(), "Score: " + score, 30,420);
         for (int i = 0; i < listaVidas.size(); i++) {
             stage.getBatch().draw(listaVidas.get(i), 800 -(listaVidas.size() - i) * (listaVidas.get(i).getWidth()+10) -20,  430-listaVidas.get(i).getHeight());
         }
@@ -172,6 +190,8 @@ public class GameScreen implements Screen {
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
+
+
     }
 
     @Override
