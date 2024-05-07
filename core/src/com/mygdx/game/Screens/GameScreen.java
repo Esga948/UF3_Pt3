@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,15 +30,18 @@ public class GameScreen implements Screen {
     //Fondo
     Texture backgraundDia, backgraundNoche, backgraund, imagenVida;
     Music ambienteJuego;
+    Sound jumpSound, evSound;
     //Score
     private int score = 0;
     private int score2 = 0;
     private int score3 = 0;
+    private int score4 = 0;
+
     private int index = 0;
     private float scoreTime = 0;
     private final float SCORE_INTERVAL = 1;
     //eevees gif
-    public Eevee eevee;
+    Eevee eevee;
     Eevee leafeon;
     Eevee umbreon;
     Array<TextureRegion> gifEevee = new Array<>();
@@ -58,9 +62,10 @@ public class GameScreen implements Screen {
     //Salto
     private boolean isJumping = false;
     private float jumpTime = 0;
-    private final float JUMP_DURATION = 1.5f; // Duración del salto en segundos
+    private float JUMP_DURATION = 1.6f; // Duración del salto en segundos
     private float jumpStartY; // Posición Y inicial del salto
     float eeveeY = 34;
+
     public GameScreen(Drop game) {
         this.game = game;
 
@@ -69,15 +74,17 @@ public class GameScreen implements Screen {
         stage = new Stage(new StretchViewport(800, 480, camera));
     }
 
-
     @Override
     public void show() {
         loadAssets();
 
         ambienteJuego = assetManager.get(AssetsDesc.ambienteJuego);
         ambienteJuego.setLooping(true);
+        ambienteJuego.setVolume(0.5f);
 
         dMove = new DugtrioHandler(assetManager);
+        jumpSound = assetManager.get(AssetsDesc.sonidoSalto);
+        evSound = assetManager.get(AssetsDesc.sonidoEv);
 
         //Crear el array para hacer el gif eevee
         eevee1 = new TextureRegion(assetManager.get(AssetsDesc.eevee1Texture));
@@ -87,24 +94,8 @@ public class GameScreen implements Screen {
         eevee = new Eevee(eevee1, eevee2, eevee3, eevee4);
         gifEevee = eevee.getGifEevee();
 
-        //Crear el array para hacer el gif leafeon
-        /*leafeon1 = new TextureRegion(assetManager.get(AssetsDesc.leafeon1Texture));
-        leafeon2 = new TextureRegion(assetManager.get(AssetsDesc.leafeon2Texture));
-        leafeon3 = new TextureRegion(assetManager.get(AssetsDesc.leafeon3Texture));
-        leafeon4 = new TextureRegion(assetManager.get(AssetsDesc.leafeon4Texture));
-        leafeon = new Eevee(leafeon1, leafeon2, leafeon3, leafeon4);
-        gifLeafeon = leafeon.getGifEevee();*/
-
-        //Crear el array para hacer el gif umbreon
-        umbreon1 = new TextureRegion(assetManager.get(AssetsDesc.umbreon1Texture));
-        umbreon2 = new TextureRegion(assetManager.get(AssetsDesc.umbreon2Texture));
-        umbreon3 = new TextureRegion(assetManager.get(AssetsDesc.umbreon3Texture));
-        umbreon4 = new TextureRegion(assetManager.get(AssetsDesc.umbreon4Texture));
-        umbreon = new Eevee(umbreon1, umbreon2, umbreon3, umbreon4);
-        gifUmbreon = umbreon.getGifEevee();
-
         //Vidas
-        vidas = new Vidas(assetManager.get(AssetsDesc.vidaTexture), 3);
+        vidas = new Vidas(assetManager, assetManager.get(AssetsDesc.vidaTexture), 3);
         listaVidas = vidas.getListaVidas();
 
         stage.addActor(dMove);
@@ -120,20 +111,20 @@ public class GameScreen implements Screen {
         }
         stateTime += delta;
         scoreTime += delta;
-        ambienteJuego = assetManager.get(AssetsDesc.ambienteJuego);
         backgraundDia = assetManager.get(AssetsDesc.diaTexture);
         backgraundNoche = assetManager.get(AssetsDesc.nocheTexture);
         backgraund = assetManager.get(AssetsDesc.back1Texture);
         imagenVida = assetManager.get(AssetsDesc.vidaTexture);
+        jumpSound = assetManager.get(AssetsDesc.sonidoSalto);
+        evSound = assetManager.get(AssetsDesc.sonidoEv);
 
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         TextureRegion currentFrameE = gifEevee.get((int) (stateTime / 0.15f) % gifEevee.size);
-        //TextureRegion currentFrameL = gifLeafeon.get((int) (stateTime / 0.15f) % gifLeafeon.size);
-        //TextureRegion currentFrameU = gifUmbreon.get((int) (stateTime / 0.15f) % gifUmbreon.size);
 
         //float eeveeY = Gdx.input.isTouched() ? 150 : 34;
         if (Gdx.input.isTouched() && !isJumping){
+            jumpSound.play(0.5f);
             jump();
         }
         if (isJumping){
@@ -146,30 +137,53 @@ public class GameScreen implements Screen {
                 eeveeY = 34;
             }
         }
-
         if (scoreTime >= SCORE_INTERVAL){
             score += 5;
             score2 += 5;
             score3 += 5;
+            score4 += 5;
             scoreTime = 0;
         }
         if (dMove.collectD(eeveeY)){
             vidas.eliminarVida();
         }
         if (score3 == 100){
-            vidas.añadirVida(assetManager.get(AssetsDesc.vidaTexture));
+            if (score >= 200){
+                vidas.añadirVidaExtra(assetManager.get(AssetsDesc.vidaTexture));
+            }else{
+                vidas.añadirVida(assetManager.get(AssetsDesc.vidaTexture));
+            }
+            System.out.println("Vidas " + vidas.getNumVidas());
             score3 = 0;
+            /*if (JUMP_DURATION > 0.8f){
+                JUMP_DURATION -= 0.2f;
+                System.out.println("Jump duration " + JUMP_DURATION);
+            }*/
         }
+        /*if (score == 300){
+            JUMP_DURATION = 1;
+        }else {*/
+        if (score4 == 10){
+            if (JUMP_DURATION > 0.7f){
+                JUMP_DURATION -= 0.02f;
+                System.out.println("Jump duration " + JUMP_DURATION);
+            }
+            score4 = 0;
+        }
+        //}
         if (vidas.getNumVidas() <= 0) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
-        stage.getBatch().begin();
+        if (score == 200){
+            newGifEevee();
+        }
 
+        stage.getBatch().begin();
         //Mostrar imagen back
         switch (index){
             case 0:
-                if (score2 >= 50){
+                if (score2 >= 150){
                     stage.getBatch().draw(backgraund, 0, -20);
                     index++;
                     score2 = 0;
@@ -187,7 +201,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case 2:
-                if (score2 >= 50){
+                if (score2 >= 200){
                     stage.getBatch().draw(backgraund, 0, -20);
                     index = 0;
                     score2 = 0;
@@ -197,9 +211,6 @@ public class GameScreen implements Screen {
             default:
                 break;
         }
-
-        //stage.getBatch().draw(currentFrameL,55, 34);
-        //stage.getBatch().draw(currentFrameU,55, 34);
         stage.getBatch().draw(currentFrameE, 55, eeveeY);
 
         //Score y vidas
@@ -217,6 +228,17 @@ public class GameScreen implements Screen {
         eeveeY = 150;
         isJumping = true;
     }
+    private void newGifEevee(){
+        //Crear el array para hacer el gif umbreon
+        umbreon1 = new TextureRegion(assetManager.get(AssetsDesc.umbreon1Texture));
+        umbreon2 = new TextureRegion(assetManager.get(AssetsDesc.umbreon2Texture));
+        umbreon3 = new TextureRegion(assetManager.get(AssetsDesc.umbreon3Texture));
+        umbreon4 = new TextureRegion(assetManager.get(AssetsDesc.umbreon4Texture));
+        umbreon = new Eevee(umbreon1, umbreon2, umbreon3, umbreon4);
+        gifEevee.clear();
+        gifEevee = umbreon.getGifEevee();
+    }
+
     @Override
     public void resize(int width, int height) {
 
@@ -251,12 +273,6 @@ public class GameScreen implements Screen {
         assetManager.load(AssetsDesc.eevee2Texture);
         assetManager.load(AssetsDesc.eevee3Texture);
         assetManager.load(AssetsDesc.eevee4Texture);
-        /*
-        assetManager.load(AssetsDesc.leafeon1Texture);
-        assetManager.load(AssetsDesc.leafeon2Texture);
-        assetManager.load(AssetsDesc.leafeon3Texture);
-        assetManager.load(AssetsDesc.leafeon4Texture);*/
-
         assetManager.load(AssetsDesc.umbreon1Texture);
         assetManager.load(AssetsDesc.umbreon2Texture);
         assetManager.load(AssetsDesc.umbreon3Texture);
@@ -267,6 +283,7 @@ public class GameScreen implements Screen {
         assetManager.load(AssetsDesc.sonidoDerrota);
         assetManager.load(AssetsDesc.sonidoEv);
         assetManager.load(AssetsDesc.sonidoSalto);
+        assetManager.load(AssetsDesc.sonidoVida);
         assetManager.load(AssetsDesc.vidaTexture);
         assetManager.finishLoading();
     }

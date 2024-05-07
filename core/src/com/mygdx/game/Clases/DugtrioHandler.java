@@ -60,7 +60,6 @@ public class DugtrioHandler extends Group {
                 duration -= 0.5f;
                 System.out.println("DURACION " + duration);
             }
-
         }
     }
 
@@ -73,7 +72,7 @@ public class DugtrioHandler extends Group {
             if(dugtrio.colisiona(y)){
                 removeActor(dugtrio);
                 result = true;
-                chocarSound.play();
+                chocarSound.play(0.4f);
             }
         }
         return result;

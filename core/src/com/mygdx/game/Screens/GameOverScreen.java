@@ -3,6 +3,7 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -15,20 +16,27 @@ public class GameOverScreen implements Screen {
     OrthographicCamera camera;
     final AssetManager assetManager = new AssetManager();
     Texture finalBackground;
+    Music ambienteFinal;
 
     public GameOverScreen(final Drop game){
         this.game = game;
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 440);
     }
     private void loadAssets() {
         assetManager.load(AssetsDesc.finalDerrotaTexture);
+        assetManager.load(AssetsDesc.ambienteFinal);
         assetManager.finishLoading();
     }
 
     @Override
     public void show() {
         loadAssets();
+
+        ambienteFinal = assetManager.get(AssetsDesc.ambienteFinal);
+        ambienteFinal.setLooping(true);
+        ambienteFinal.play();
     }
 
     @Override

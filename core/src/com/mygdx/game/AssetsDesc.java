@@ -43,8 +43,6 @@ public class AssetsDesc {
     public static final AssetDescriptor<Sound> sonidoEv = new AssetDescriptor("sonido-ev.mp3", Sound.class);
     public static final AssetDescriptor<Sound> sonidoDerrota = new AssetDescriptor("sonido-derrota.mp3", Sound.class);
     public static final AssetDescriptor<Sound> sonidoSalto = new AssetDescriptor("sonido-salto.mp3", Sound.class);
-
-
-
+    public static final AssetDescriptor<Sound> sonidoVida = new AssetDescriptor("sonido-vida.mp3", Sound.class);
 
 }

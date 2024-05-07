@@ -1,6 +1,9 @@
 package com.mygdx.game.Clases;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.AssetsDesc;
 
 import java.util.ArrayList;
 
@@ -8,11 +11,13 @@ public class Vidas {
     ArrayList<Texture> listaVidas;
     Texture vida;
     int numVidas;
+    Sound vidaSound;
 
-    public Vidas(Texture vida, int numVidas) {
+    public Vidas(AssetManager assetManager, Texture vida, int numVidas) {
         this.vida = vida;
         this.numVidas = numVidas;
         this.listaVidas = new ArrayList<>();
+        vidaSound = assetManager.get(AssetsDesc.sonidoVida);
         crearListaVidas(vida, numVidas);
     }
 
@@ -29,14 +34,25 @@ public class Vidas {
             numVidas--;
             listaVidas.remove(listaVidas.size()-1);
         }
+        System.out.println("Vidas: " + numVidas);
     }
 
     public void añadirVida(Texture vida){
         if (numVidas >= 3){
             numVidas = 3;
         }else{
-            System.out.println("numVidas: " + numVidas);
             numVidas++;
+            vidaSound.play(0.5f);
+            listaVidas.add(vida);
+        }
+        System.out.println("Vidaaaas " + numVidas);
+    }
+    public void añadirVidaExtra(Texture vida){
+        if (numVidas >= 4){
+            numVidas = 4;
+        }else{
+            numVidas++;
+            vidaSound.play(0.5f);
             listaVidas.add(vida);
         }
     }

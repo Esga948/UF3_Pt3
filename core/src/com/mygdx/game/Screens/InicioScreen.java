@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -16,22 +17,27 @@ public class InicioScreen implements Screen {
     OrthographicCamera camera;
     final AssetManager assetManager = new AssetManager();
     Texture inicioBackground;
+    Music ambienteInicio;
 
     public InicioScreen(final Drop game){
         this.game = game;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 440);
-
     }
     private void loadAssets() {
         assetManager.load(AssetsDesc.inicioTexture);
+        assetManager.load(AssetsDesc.ambienteInicio);
         assetManager.finishLoading();
     }
         @Override
     public void show() {
             loadAssets();
-    }
+
+            ambienteInicio = assetManager.get(AssetsDesc.ambienteInicio);
+            ambienteInicio.setLooping(true);
+            ambienteInicio.play();
+        }
 
     @Override
     public void render(float delta) {

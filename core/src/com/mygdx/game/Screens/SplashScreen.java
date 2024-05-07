@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -28,7 +29,7 @@ public class SplashScreen implements Screen {
         this.game = game;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     private static ArrayList<Texture> loadGifFrames(String gifFilePath) {
@@ -53,21 +54,28 @@ public class SplashScreen implements Screen {
     @Override
     public void show() {
        frames = loadGifFrames("gifSplash.gif");
-
     }
 
     @Override
     public void render(float delta) {
-
         timetoSplashScreen -= delta;
 
         if (TimeUtils.timeSinceMillis(lastFrameTime) > FRAME_DURATION) {
             // Actualizar el tiempo de la última actualización de frame
             lastFrameTime = TimeUtils.millis();
 
+            GlyphLayout layoutTitulo = new GlyphLayout(game.fontTitulo, "Juego del Eevee");
+            float tituloX = (Gdx.graphics.getWidth() - layoutTitulo.width) / 2;
+
+            camera.update();
+            game.batch.setProjectionMatrix(camera.combined);
+
             // Dibujar el frame actual
             game.batch.begin();
             game.batch.draw(frames.get(currentFrameIndex), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            game.fontTitulo.draw(game.batch, "Juego del Eevee", tituloX, 200);
+            game.fontTitulo2.draw(game.batch, "Juego del Eevee", tituloX, 200);
+
             game.batch.end();
 
             // Incrementar el índice del frame actual
