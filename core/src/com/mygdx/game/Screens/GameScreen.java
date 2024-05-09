@@ -45,13 +45,10 @@ public class GameScreen implements Screen {
     Eevee leafeon;
     Eevee umbreon;
     Array<TextureRegion> gifEevee = new Array<>();
-    public TextureRegion eevee1;
+    TextureRegion eevee1;
     TextureRegion eevee2;
     TextureRegion eevee3;
     TextureRegion eevee4;
-    Array<TextureRegion> gifLeafeon = new Array<>();
-    TextureRegion leafeon1, leafeon2, leafeon3, leafeon4;
-    Array<TextureRegion> gifUmbreon = new Array<>();
     TextureRegion umbreon1, umbreon2, umbreon3, umbreon4;
     private float stateTime;
     //Obstaculos
@@ -78,13 +75,14 @@ public class GameScreen implements Screen {
     public void show() {
         loadAssets();
 
+        //Cargamos la musica de fondo y los efectos de sonido necesarios
         ambienteJuego = assetManager.get(AssetsDesc.ambienteJuego);
         ambienteJuego.setLooping(true);
         ambienteJuego.setVolume(0.5f);
-
-        dMove = new DugtrioHandler(assetManager);
         jumpSound = assetManager.get(AssetsDesc.sonidoSalto);
         evSound = assetManager.get(AssetsDesc.sonidoEv);
+
+        dMove = new DugtrioHandler(assetManager);
 
         //Crear el array para hacer el gif eevee
         eevee1 = new TextureRegion(assetManager.get(AssetsDesc.eevee1Texture));
@@ -122,21 +120,26 @@ public class GameScreen implements Screen {
 
         TextureRegion currentFrameE = gifEevee.get((int) (stateTime / 0.15f) % gifEevee.size);
 
-        //float eeveeY = Gdx.input.isTouched() ? 150 : 34;
+        //Añadimos un controlador para que si el personaje ya esta saltando, aunque le vuelva
+        // a dar a la pantalla o mantenga presionado no se quede volando
         if (Gdx.input.isTouched() && !isJumping){
             jumpSound.play(0.5f);
             jump();
         }
+
+        //Hace el salto y cuando cae da la posibilidad de volver a saltar
         if (isJumping){
             jumpTime += delta;
-            float jumpProgress = jumpTime / JUMP_DURATION;
-            float newY = jumpStartY - 150* jumpProgress;
+            //float jumpProgress = jumpTime / JUMP_DURATION;
+            //float newY = jumpStartY - 150* jumpProgress;
             if (jumpTime >= JUMP_DURATION) {
                 isJumping = false;
                 jumpTime = 0;
                 eeveeY = 34;
             }
         }
+        //Añadimos varios scores para poder manejar variables ya que si usamos el (score3 % 10 == 0)
+        //como el render entra varias veces en el mismo segundo el funcionamiento es erroneo
         if (scoreTime >= SCORE_INTERVAL){
             score += 5;
             score2 += 5;
@@ -144,25 +147,25 @@ public class GameScreen implements Screen {
             score4 += 5;
             scoreTime = 0;
         }
+
+        //llama a la funcion para comprobar si han colisionado los peronajes
         if (dMove.collectD(eeveeY)){
             vidas.eliminarVida();
         }
+
+        //Regeneramos una vida cada vez que el score llega a 100, si ha pasado el score donde evoluciona
+        // añadiremos la cuarta vida como máximo
         if (score3 == 100){
             if (score >= 200){
                 vidas.añadirVidaExtra(assetManager.get(AssetsDesc.vidaTexture));
             }else{
                 vidas.añadirVida(assetManager.get(AssetsDesc.vidaTexture));
             }
-            System.out.println("Vidas " + vidas.getNumVidas());
             score3 = 0;
-            /*if (JUMP_DURATION > 0.8f){
-                JUMP_DURATION -= 0.2f;
-                System.out.println("Jump duration " + JUMP_DURATION);
-            }*/
+
         }
-        /*if (score == 300){
-            JUMP_DURATION = 1;
-        }else {*/
+
+        //Cada que el score llega a 10 reduciremos el tiempo de salto intentando coordinarlo con la velocidad creciente de los obstaculos
         if (score4 == 10){
             if (JUMP_DURATION > 0.7f){
                 JUMP_DURATION -= 0.02f;
@@ -170,17 +173,20 @@ public class GameScreen implements Screen {
             }
             score4 = 0;
         }
-        //}
+
+        //Controlaremos que si pierde todas las vidas dirija a la pantalla de Game Over
         if (vidas.getNumVidas() <= 0) {
-            game.setScreen(new GameOverScreen(game));
+            game.setScreen(new GameOverScreen(game, score));
             dispose();
         }
+
+        //Cuando el score llegue a 200 el eevee evolucionara camviando su aspecto y añadiendo una vida más como máximo
         if (score == 200){
             newGifEevee();
         }
 
         stage.getBatch().begin();
-        //Mostrar imagen back
+        //Mostrar imagen back, dependiendo el score se verá una escena u otra
         switch (index){
             case 0:
                 if (score2 >= 150){
@@ -211,6 +217,7 @@ public class GameScreen implements Screen {
             default:
                 break;
         }
+        //Mostramos el gif en la posicion correspondiente
         stage.getBatch().draw(currentFrameE, 55, eeveeY);
 
         //Score y vidas
@@ -223,6 +230,7 @@ public class GameScreen implements Screen {
         stage.draw();
     }
 
+    //Impide que se pueda mantener pulsado para que se mantenga volando el personaje, ni que se pueda dar varias veces seguidas sin que baje primero
     private void jump(){
         jumpStartY = eeveeY;
         eeveeY = 150;

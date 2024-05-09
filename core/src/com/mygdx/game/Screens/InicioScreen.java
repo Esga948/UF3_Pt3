@@ -51,6 +51,7 @@ public class InicioScreen implements Screen {
         GlyphLayout layoutTitulo = new GlyphLayout(game.fontTitulo, "Start");
         GlyphLayout layoutTxt = new GlyphLayout(game.font, "Tap to begin");
 
+        //Localizamos la posicion central para el texto
         float tituloX = (800 - layoutTitulo.width) / 2;
         float tituloY = (700 - layoutTitulo.height) / 2;
         float txtX = (800 - layoutTxt.width) / 2;

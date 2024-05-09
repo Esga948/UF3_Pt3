@@ -47,6 +47,8 @@ public class Vidas {
         }
         System.out.println("Vidaaaas " + numVidas);
     }
+
+    //Función que añade una vida extra cuando el Eevee evoluciona
     public void añadirVidaExtra(Texture vida){
         if (numVidas >= 4){
             numVidas = 4;

@@ -18,10 +18,11 @@ public class Dugtrio extends Image {
         if ( getX() == 0 )
             getParent().removeActor(this);
     }
+    //Crea los rectangulos que controlaran si se choca el personaje con el obstaculo
     public boolean colisiona(float y ) {
         // Calculem els rectangles de col·lisió dels dos objectes
         Rectangle rectangleDugtrio = new Rectangle(getX(), getY(), getWidth(), getHeight());
-        Rectangle rectangleEevee = new Rectangle(65, y, 100, 100);
+        Rectangle rectangleEevee = new Rectangle(65, y + 10, 100, 100);
         //El mètode overlaps indica si hi ha solapament entre els dos rectangles calculats
         return rectangleDugtrio.overlaps(rectangleEevee);
     }

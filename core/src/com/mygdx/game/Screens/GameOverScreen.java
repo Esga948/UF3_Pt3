@@ -17,9 +17,11 @@ public class GameOverScreen implements Screen {
     final AssetManager assetManager = new AssetManager();
     Texture finalBackground;
     Music ambienteFinal;
+    int score;
 
-    public GameOverScreen(final Drop game){
+    public GameOverScreen(final Drop game, int score){
         this.game = game;
+        this.score = score;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 440);
@@ -47,12 +49,15 @@ public class GameOverScreen implements Screen {
         finalBackground = assetManager.get(AssetsDesc.finalDerrotaTexture);
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
-        //Cogemos las dimensiones del texto
+        //Cogemos las dimensiones del texto para centrarlo en la pantalla
         GlyphLayout layoutTitulo = new GlyphLayout(game.fontTitulo, "Game over");
+       // GlyphLayout layoutScore = new GlyphLayout(game.font, "Final score: " + score);
         GlyphLayout layoutTxt = new GlyphLayout(game.font, "Tap to go to start");
 
+        //Localizamos la posicion central para el texto
         float tituloX = (800 - layoutTitulo.width) / 2;
-        float tituloY = (700 - layoutTitulo.height) / 2 - 50;
+        float tituloY = (700 - layoutTitulo.height) / 2 - 45;
+        //float scoreX = (800 - layoutScore.width) / 2;
         float txtX = (800 - layoutTxt.width) / 2;
 
         camera.update();
@@ -62,7 +67,8 @@ public class GameOverScreen implements Screen {
         game.batch.draw(finalBackground, 0, 0);
         game.fontTitulo.draw(game.batch, "Game over", tituloX, tituloY);
         game.fontTitulo2.draw(game.batch, "Game over", tituloX, tituloY);
-        game.font.draw(game.batch, "Tap to go to start", txtX, 155);
+        game.fontScore.draw(game.batch, "Final score:  " + score, 55, 375);
+        game.font.draw(game.batch, "Tap to go to start", txtX, 125);
         game.batch.end();
 
         if (Gdx.input.isTouched()) {

@@ -25,6 +25,7 @@ public class DugtrioHandler extends Group {
     private float duration = 5;
     private final float minDuration = 1;
 
+    //Constructor, genera el primer obstaculo
     public DugtrioHandler(AssetManager assetManager){
         lastDTime = TimeUtils.nanoTime();
         texture = assetManager.get(AssetsDesc.dugtrioTexture);
@@ -39,6 +40,7 @@ public class DugtrioHandler extends Group {
         spawnD();
     }
 
+    //Controla el riempo del ultimo obstaculo creado y genera otro
     private void spawnD() {
         long currentTime = TimeUtils.nanoTime();
         if ( currentTime - lastDTime > DUGTRIO_TIME_INTERVAL){
@@ -63,6 +65,7 @@ public class DugtrioHandler extends Group {
         }
     }
 
+    //Controla si el obstaculo choca contra el personaje
     public boolean collectD(float y){
         boolean result = false;
         Iterator<Actor> it = getChildren().iterator();

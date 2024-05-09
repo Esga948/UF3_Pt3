@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Clases;
 
 /* Copyright by Johannes Borchardt */
 /* LibGdx conversion 2014 by Anton Persson */

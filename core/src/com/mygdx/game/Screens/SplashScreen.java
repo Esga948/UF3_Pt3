@@ -2,16 +2,12 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.game.Drop;
-import com.mygdx.game.GifDecoder;
-import com.mygdx.game.Screens.GameScreen;
+import com.mygdx.game.Clases.GifDecoder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +28,7 @@ public class SplashScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    //Divide el gif en frames y los guarda en el array
     private static ArrayList<Texture> loadGifFrames(String gifFilePath) {
         ArrayList<Texture> frames = new ArrayList<>();
 
@@ -47,7 +44,6 @@ public class SplashScreen implements Screen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return frames;
     }
 

@@ -19,6 +19,7 @@ public class Eevee extends Image{
     TextureRegion eevee3;
     TextureRegion eevee4;
 
+    //Constructor al que pasamos todas las imagenes que forman el gif
     public Eevee(TextureRegion eevee1, TextureRegion eevee2, TextureRegion eevee3, TextureRegion eevee4) {
         this.gifEevee = new Array<>();
         this.eevee1 = eevee1;
@@ -28,16 +29,13 @@ public class Eevee extends Image{
         crearGif(eevee1, eevee2, eevee3, eevee4);
     }
 
+    //Creamos el array con las imagenes
     private void crearGif(TextureRegion eevee1, TextureRegion eevee2, TextureRegion eevee3, TextureRegion eevee4){
         gifEevee.add(eevee1);
         gifEevee.add(eevee2);
         gifEevee.add(eevee3);
         gifEevee.add(eevee4);
     }
-
-    /*public void Jump(float deltaY){
-        setPosition(55, 150);
-    }*/
 
     public Array<TextureRegion> getGifEevee() {
         return gifEevee;
